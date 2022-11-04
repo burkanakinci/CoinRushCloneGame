@@ -12,15 +12,14 @@ public class RunCoinState : IState
 
     public void Enter()
     {
-        Debug.Log("EnterCoin");
     }
     public void LogicalUpdate()
     {
-
+        m_Coin.RotateToFrontCoin();
     }
     public void PhysicalUpdate()
     {
-        
+
         m_Coin.SetVelocity();
     }
     public void Exit()

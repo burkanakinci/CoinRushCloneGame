@@ -12,7 +12,7 @@ public class ParticipationPlayerCoinState : IState
 
     public void Enter()
     {
-
+        m_Coin.MoveToFrontCoin();
     }
     public void LogicalUpdate()
     {
@@ -24,6 +24,6 @@ public class ParticipationPlayerCoinState : IState
     }
     public void Exit()
     {
-
+        m_Coin.transform.SetParent(null);
     }
 }

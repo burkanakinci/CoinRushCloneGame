@@ -8,6 +8,7 @@ public class PooledObjectTags
 }
 public class ObjectTags
 {
+    public const string CollectedCoin = "CollectedCoin";
 }
 
 public enum ListOperation
@@ -19,16 +20,15 @@ public enum ListOperation
 public enum CoinStates
 {
     IdleCoinState = 0,
-    ParticipationPlayerCoinState=1,
+    ParticipationPlayerCoinState = 1,
     RunCoinState = 2,
 
 }
 
 public enum ObjectsLayer
 {
-    Collactable = 8,
-    Collacted = 9,
-    Gun = 10
+    CoinCollectable = 6,
+    CoinCollected = 7,
 }
 public enum UIPanelType
 {

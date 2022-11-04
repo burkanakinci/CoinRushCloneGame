@@ -13,4 +13,14 @@ public class CoinStateMachine : StateMachine
         m_States.Add(new ParticipationPlayerCoinState(_coin));
         m_States.Add(new RunCoinState(_coin));
     }
+
+    public void ChangeCoinState(CoinStates _state, bool _changeForce = false)
+    {
+        ChangeState((int)_state, _changeForce);
+    }
+
+    public bool EqualState(CoinStates _state)
+    {
+        return EqualCurrentState((int)_state);
+    }
 }
