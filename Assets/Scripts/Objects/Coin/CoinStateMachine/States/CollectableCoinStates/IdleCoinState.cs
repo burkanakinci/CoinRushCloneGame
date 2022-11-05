@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class IdleCoinState : IState
 {
-    private Coin m_Coin;
-    public IdleCoinState(Coin _coin)
+    private CollectableCoin m_Coin;
+    public IdleCoinState(CollectableCoin _coin)
     {
         m_Coin = _coin;
     }
@@ -16,7 +16,6 @@ public class IdleCoinState : IState
     }
     public void LogicalUpdate()
     {
-
     }
     public void PhysicalUpdate()
     {

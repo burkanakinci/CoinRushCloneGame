@@ -6,36 +6,23 @@ using DG.Tweening;
 public class Coin : CustomBehaviour
 {
     #region Attributes
-    [SerializeField] private Transform m_CoinVisualParent;
-    [SerializeField] private Rigidbody m_CoinRB;
-    [SerializeField] private Collider m_CoinCollider;
-    [SerializeField] private float m_RotationMultiplier = 1.0f, m_ForwardVelocityMultiplier = 5f;
-    private CoinStateMachine m_CoinStateMachine;
-    [SerializeField] private Transform m_BackCoinParent;
+    [SerializeField] protected Transform m_CoinVisualParent;
+    [SerializeField] protected Transform m_CoinVisual;
+    [SerializeField] protected Collider m_CoinCollider;
+    [SerializeField] protected Transform m_BackCoinParent;
+    protected CoinStateMachine m_CoinStateMachine;
 
     public Coin FrontCoin;
     public Coin BackCoin;
     #endregion
 
     #region ExternalAccess
-    [HideInInspector] public Transform BackCoinParent => m_BackCoinParent;
+    public Transform BackCoinParent => m_BackCoinParent;
     #endregion
+
     public override void Initialize()
     {
-        m_CoinStateMachine = new CoinStateMachine(this);
-        m_CoinStateMachine.ChangeCoinState(CoinStates.RunCoinState);
-
-        GameManager.Instance.InputManager.OnSwiped += UpdateSwipeValue;
-    }
-
-    public void Initialize2()
-    {
-        m_CoinRB.isKinematic = true;
-        m_CoinCollider.isTrigger = true;
-        m_CoinStateMachine = new CoinStateMachine(this);
-        m_CoinStateMachine.ChangeCoinState(CoinStates.IdleCoinState);
-
-        m_FrontCoinMovementTweenID = GetInstanceID() + "m_FrontCoinMovementTweenID";
+        m_VisualPunchSequenceID = GetInstanceID() + "m_VisualPunchTweenID";
     }
 
     private void FixedUpdate()
@@ -47,80 +34,35 @@ public class Coin : CustomBehaviour
         m_CoinStateMachine.LogicalUpdate();
     }
 
-    private float m_SwipeValue;
-    private Vector3 m_CoinLookPos;
-    private Quaternion m_CoinRotation, m_TempRotation;
-    public void UpdateSwipeValue(float _swipeValue)
+    private Vector3 m_TargetVisualAngle;
+    public void RotateCoinVisual()
     {
-        m_SwipeValue = _swipeValue;
-
-        m_CoinLookPos = transform.forward;
-        m_CoinLookPos.x += m_SwipeValue * m_RotationMultiplier;
-
-        RotateCoin(m_CoinLookPos);
-    }
-    public void RotateCoin(Vector3 _lookPos)
-    {
-        m_TempRotation = Quaternion.LookRotation(_lookPos);
-        m_CoinRotation = Quaternion.Slerp(transform.rotation, m_TempRotation, 0.35f);
-
-        transform.rotation = m_CoinRotation;
+        m_TargetVisualAngle = m_CoinVisual.localEulerAngles;
+        m_TargetVisualAngle.z += 10f;
+        m_CoinVisual.localEulerAngles = Vector3.Lerp(m_CoinVisual.localEulerAngles, m_TargetVisualAngle, 30.0f * Time.deltaTime);
     }
 
-    public void RotateToFrontCoin()
+    private string m_VisualPunchSequenceID;
+    private Sequence m_VisualPunchSequence;
+    public void VisualPunchTween()
     {
-        if (FrontCoin != null)
+        DOTween.Kill(m_VisualPunchSequenceID);
+
+        m_VisualPunchSequence = DOTween.Sequence().SetId(m_VisualPunchSequenceID);
+
+        m_VisualPunchSequence.Append(
+            m_CoinVisualParent.DOScale((Vector3.one * 1.25f), 0.25f)
+        );
+        m_VisualPunchSequence.Append(
+            m_CoinVisualParent.DOScale((Vector3.one), 0.25f)
+        );
+        m_VisualPunchSequence.InsertCallback(0.25f, () =>
         {
-            BackCoinParent.LookAt(FrontCoin.BackCoinParent);
-            transform.rotation = Quaternion.Slerp(transform.rotation, BackCoinParent.rotation, 0.65f);
+            if (BackCoin != null)
+            {
+                BackCoin.VisualPunchTween();
+            }
         }
-    }
-
-    public void SetVelocity()
-    {
-        m_CoinRB.velocity = transform.forward * m_ForwardVelocityMultiplier;
-    }
-
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if ((m_CoinStateMachine.EqualState(CoinStates.IdleCoinState)) &&
-        other.CompareTag(ObjectTags.CollectedCoin))
-        {
-            gameObject.layer = (int)ObjectsLayer.CoinCollected;
-            FrontCoin = GameManager.Instance.PlayerManager.LastCoin;
-            GameManager.Instance.PlayerManager.LastCoin = this;
-
-            m_CoinStateMachine.ChangeCoinState(CoinStates.ParticipationPlayerCoinState);
-        }
-    }
-
-    private string m_FrontCoinMovementTweenID;
-    private float m_FrontCoinMovementLerpValue;
-    private Vector3 m_FrontCoinMovementStartPos;
-    private Quaternion m_FrontCoinMovementStartRot;
-    public void MoveToFrontCoin()
-    {
-        m_FrontCoinMovementLerpValue = 0.0f;
-        m_FrontCoinMovementStartPos = transform.position;
-        m_FrontCoinMovementStartRot = transform.rotation;
-
-        DOTween.Kill(m_FrontCoinMovementTweenID);
-
-        DOTween.To(() => m_FrontCoinMovementLerpValue, x => m_FrontCoinMovementLerpValue = x, 1.0f, 1f).
-                OnUpdate(() =>
-                {
-                    transform.position = Vector3.Lerp(m_FrontCoinMovementStartPos, FrontCoin.BackCoinParent.position, m_FrontCoinMovementLerpValue);
-                    transform.rotation = Quaternion.Slerp(m_FrontCoinMovementStartRot, FrontCoin.transform.rotation, m_FrontCoinMovementLerpValue);
-                }).
-                OnComplete(() =>
-                {
-                    m_CoinRB.isKinematic = false;
-                    m_CoinCollider.isTrigger = false;
-                    FrontCoin.BackCoin = this;
-                    m_CoinStateMachine.ChangeCoinState(CoinStates.RunCoinState);
-                }).
-                SetEase(Ease.Linear).
-                SetId(m_FrontCoinMovementTweenID);
+        );
     }
 }

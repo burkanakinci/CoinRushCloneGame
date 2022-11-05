@@ -17,11 +17,18 @@ public enum ListOperation
     Subtraction
 }
 
-public enum CoinStates
+public enum CollectableCoinStates
 {
     IdleCoinState = 0,
     ParticipationPlayerCoinState = 1,
     RunCoinState = 2,
+
+}
+
+public enum MainCoinStates
+{
+    IdleCoinState = 0,
+    RunCoinState = 1,
 
 }
 

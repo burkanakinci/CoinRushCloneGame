@@ -6,17 +6,18 @@ using System;
 public class PlayerManager : CustomBehaviour
 {
     #region Attributes
-    [SerializeField] private Coin m_MainCoin;
+    public MainCoin MainCoin;
+    public CollectableCoin CollectableCoin;
+
     public Coin LastCoin;
-    [SerializeField] private Coin coin2;
     #endregion
     #region ExternalAccess
 
     #endregion
     public override void Initialize()
     {
-        m_MainCoin.Initialize();
-        LastCoin = m_MainCoin;
-        coin2.Initialize2();
+        MainCoin.Initialize();
+        LastCoin = MainCoin;
+        CollectableCoin.Initialize();
     }
 }
