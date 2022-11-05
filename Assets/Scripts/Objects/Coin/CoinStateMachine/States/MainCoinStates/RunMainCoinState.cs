@@ -12,6 +12,7 @@ public class RunMainCoinState : IState
 
     public void Enter()
     {
+        GameManager.Instance.InputManager.OnSwiped += m_Coin.UpdateSwipeValue;
     }
     public void LogicalUpdate()
     {
@@ -23,6 +24,6 @@ public class RunMainCoinState : IState
     }
     public void Exit()
     {
-
+        GameManager.Instance.InputManager.OnSwiped -= m_Coin.UpdateSwipeValue;
     }
 }

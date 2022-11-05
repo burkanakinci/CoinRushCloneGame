@@ -12,8 +12,8 @@ public class Coin : CustomBehaviour
     [SerializeField] protected Transform m_BackCoinParent;
     protected CoinStateMachine m_CoinStateMachine;
 
-    public Coin FrontCoin;
-    public Coin BackCoin;
+    [HideInInspector] public Coin FrontCoin;
+    [HideInInspector] public Coin BackCoin;
     #endregion
 
     #region ExternalAccess

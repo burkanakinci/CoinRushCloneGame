@@ -9,6 +9,15 @@ public class PooledObjectTags
 public class ObjectTags
 {
     public const string CollectedCoin = "CollectedCoin";
+    public const string FallTrigger = "FallTrigger";
+    public const string HillTrigger = "HillTrigger";
+}
+public enum ObjectsLayer
+{
+    CoinCollectable = 6,
+    CoinCollected = 7,
+    FallCollider = 8,
+    HillTrigger=9,
 }
 
 public enum ListOperation
@@ -24,18 +33,12 @@ public enum CollectableCoinStates
     RunCoinState = 2,
 
 }
-
 public enum MainCoinStates
 {
     IdleCoinState = 0,
     RunCoinState = 1,
+    FallMainCoinState = 2,
 
-}
-
-public enum ObjectsLayer
-{
-    CoinCollectable = 6,
-    CoinCollected = 7,
 }
 public enum UIPanelType
 {
