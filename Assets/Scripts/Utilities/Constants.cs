@@ -5,6 +5,10 @@ public class Constants
 
 public class PooledObjectTags
 {
+    public const string Road = "Road";
+    public const string AxeObstacle = "AxeObstacle";
+    public const string TurningObstacle = "TurningObstacle";
+    public const string SlidingObstacle = "SlidingObstacle";
 }
 public class ObjectTags
 {
@@ -45,9 +49,9 @@ public enum MainCoinStates
 }
 public enum ObstacleType
 {
-    TurningObstacle=0,
-    AxeObstacle=1,
-    SlidingObstacle=2,
+    TurningObstacle = 0,
+    AxeObstacle = 1,
+    SlidingObstacle = 2,
 }
 public enum UIPanelType
 {

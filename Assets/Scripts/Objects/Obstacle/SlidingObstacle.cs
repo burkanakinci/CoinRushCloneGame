@@ -3,12 +3,25 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
-public class SlidingObstacle : Obstacle
+public class SlidingObstacle : Obstacle, IPooledObject
 {
     public override void Initialize()
     {
         base.Initialize();
         ObstacleTween();
+    }
+
+    public void OnObjectSpawn()
+    {
+
+    }
+    public void OnObjectDeactive()
+    {
+
+    }
+    public CustomBehaviour GetGameObject()
+    {
+        return this;
     }
 
     private Sequence m_ObstacleSequence;
