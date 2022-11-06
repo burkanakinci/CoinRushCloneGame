@@ -8,7 +8,8 @@ public class PlayerManager : CustomBehaviour
     #region Attributes
     public MainCoin MainCoin;
     public CollectableCoin CollectableCoin;
-
+    public TurningObstacle Obstacle;
+    public AxeObstacle AxeObstacle;
     public Coin LastCoin;
     #endregion
     #region ExternalAccess
@@ -19,5 +20,7 @@ public class PlayerManager : CustomBehaviour
         MainCoin.Initialize();
         LastCoin = MainCoin;
         CollectableCoin.Initialize();
+        Obstacle.Initialize();
+        AxeObstacle.Initialize();
     }
 }

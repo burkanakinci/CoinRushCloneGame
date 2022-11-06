@@ -68,6 +68,17 @@ public class MainCoin : Coin
             m_ActiveHill = other.GetComponent<HillTrigger>();
             StartEmplacementOnRoadTween();
         }
+        else if (other.CompareTag(ObjectTags.Obstacle))
+        {
+            if (GameManager.Instance.PlayerManager.LastCoin == this)
+            {
+                GameManager.Instance.LevelFailed();
+            }
+            else
+            {
+                //son coin faille
+            }
+        }
     }
 
     private Coroutine m_StartEmplacementCoroutine;
@@ -106,10 +117,10 @@ public class MainCoin : Coin
 
         m_EmplacementSequence = DOTween.Sequence().SetId(m_EmplacementTweenID);
         m_EmplacementSequence.Append(
-            transform.DORotateQuaternion(m_TempEmplacementRot, 0.4f)
+            transform.DORotateQuaternion(m_TempEmplacementRot, 0.4f).SetEase(Ease.Linear)
         );
         m_EmplacementSequence.Append(
-            transform.DOMove(m_TempEmplacementPos, 0.6f)
+            transform.DOMove(m_TempEmplacementPos, 0.6f).SetEase(Ease.Linear)
         ).OnComplete(() =>
         {
             m_IsSeated = true;

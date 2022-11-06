@@ -34,6 +34,12 @@ public class CollectableCoin : Coin
             MoveToFrontCoinSequence();
             m_CoinStateMachine.ChangeCoinState(CollectableCoinStates.ParticipationPlayerCoinState);
         }
+        else if (other.CompareTag(ObjectTags.Obstacle))
+        {
+
+            // coin faille
+
+        }
     }
 
     private string m_FrontCoinMovementSequenceID;

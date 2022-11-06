@@ -11,13 +11,15 @@ public class ObjectTags
     public const string CollectedCoin = "CollectedCoin";
     public const string FallTrigger = "FallTrigger";
     public const string HillTrigger = "HillTrigger";
+    public const string Obstacle = "Obstacle";
 }
 public enum ObjectsLayer
 {
     CoinCollectable = 6,
     CoinCollected = 7,
     FallCollider = 8,
-    HillTrigger=9,
+    HillTrigger = 9,
+    Obstacle = 10,
 }
 
 public enum ListOperation

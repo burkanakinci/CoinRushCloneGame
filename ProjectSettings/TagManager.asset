@@ -7,6 +7,7 @@ TagManager:
   - CollectedCoin
   - FallTrigger
   - HillTrigger
+  - Obstacle
   layers:
   - Default
   - TransparentFX
@@ -18,7 +19,7 @@ TagManager:
   - CoinCollected
   - FallCollider
   - HillTrigger
-  - 
+  - Obstacle
   - 
   - 
   - 

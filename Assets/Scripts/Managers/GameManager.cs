@@ -9,7 +9,6 @@ public class GameManager : CustomBehaviour
     #region Attributes
     public InputManager InputManager;
     public PlayerManager PlayerManager;
-
     #endregion
 
     #region Actions
