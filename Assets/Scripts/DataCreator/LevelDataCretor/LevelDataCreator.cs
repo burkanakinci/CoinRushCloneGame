@@ -126,6 +126,36 @@ public class LevelDataCreator : MonoBehaviour
     public void LoadData()
     {
         ClearScene();
+
+        for (int _obstacleCount = 0; _obstacleCount < TempLevelData.ObstacleTypes.Length; _obstacleCount++)
+        {
+            GameObject m_SpawnedObstacle;
+            switch (TempLevelData.ObstacleTypes[_obstacleCount])
+            {
+                case (ObstacleType.AxeObstacle):
+                    m_SpawnedObstacle = Instantiate(m_AxeObstaclePrefab, TempLevelData.ObstaclePositions[_obstacleCount], Quaternion.identity, null);
+                    if (m_SpawnedObstacle.transform.position.x > 0)
+                    {
+                        m_SpawnedObstacle.transform.eulerAngles = Vector3.up * (-90.0f);
+                    }
+                    else
+                    {
+                        m_SpawnedObstacle.transform.eulerAngles = Vector3.up * (90.0f);
+                    }
+                    break;
+                case (ObstacleType.SlidingObstacle):
+                    m_SpawnedObstacle = Instantiate(m_SlidingObstaclePrefab, TempLevelData.ObstaclePositions[_obstacleCount], Quaternion.identity, null);
+                    break;
+                case (ObstacleType.TurningObstacle):
+                    m_SpawnedObstacle = Instantiate(m_TurningObstaclePrefab, TempLevelData.ObstaclePositions[_obstacleCount], Quaternion.identity, null);
+                    break;
+            }
+        }
+
+        for (int _roadCount = 0; _roadCount < TempLevelData.RoadPositions.Length; _roadCount++)
+        {
+            Instantiate(m_RoadPrefab, TempLevelData.RoadPositions[_roadCount], TempLevelData.RoadRotations[_roadCount], null);
+        }
     }
 
     private List<GameObject> m_RoadsOnScene;
