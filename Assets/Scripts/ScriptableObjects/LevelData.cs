@@ -9,5 +9,8 @@ public class LevelData : ScriptableObject
     public Quaternion[] RoadRotations;
     public ObstacleType[] ObstacleTypes;
     public Vector3[] ObstaclePositions;
+    public Quaternion[] ObstacleRotations;
+    public Vector3[] CoinPositions;
+    public Quaternion[] CoinRotations;
     #endregion
 }

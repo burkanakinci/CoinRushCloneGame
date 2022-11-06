@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
-public class CollectableCoin : Coin
+public class CollectableCoin : Coin, IPooledObject
 {
     #region MovementLerpMultiplier
     [SerializeField] private float m_RotateFrontCoinLerpLerp = 50.0f, m_MoveFrontCoinLerp = 50.0f;
@@ -11,16 +11,29 @@ public class CollectableCoin : Coin
     public override void Initialize()
     {
         base.Initialize();
-
-        gameObject.layer = (int)ObjectsLayer.CoinCollectable;
-        m_CoinCollider.isTrigger = true;
-
         m_CoinStateMachine = new CollectableCoinStateMachine(this);
-        m_CoinStateMachine.ChangeCoinState(CollectableCoinStates.IdleCoinState, true);
 
         m_FrontCoinMovementSequenceID = GetInstanceID() + "m_FrontCoinMovementSequenceID";
     }
+    public void OnObjectSpawn()
+    {
+        GameManager.Instance.LevelManager.OnCleanSceneObject += OnObjectDeactive;
 
+        gameObject.layer = (int)ObjectsLayer.CoinCollectable;
+        m_CoinCollider.isTrigger = true;
+        m_CoinStateMachine.ChangeCoinState(CollectableCoinStates.IdleCoinState, true);
+    }
+    public void OnObjectDeactive()
+    {
+        GameManager.Instance.LevelManager.OnCleanSceneObject -= OnObjectDeactive;
+
+        GameManager.Instance.ObjectPool.AddObjectPool(PooledObjectTags.CollectableCoin, this);
+        this.gameObject.SetActive(false);
+    }
+    public CustomBehaviour GetGameObject()
+    {
+        return this;
+    }
 
     private void OnTriggerEnter(Collider other)
     {

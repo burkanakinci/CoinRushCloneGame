@@ -16,6 +16,7 @@ public class LevelDataCreator : MonoBehaviour
     [SerializeField] private GameObject m_AxeObstaclePrefab;
     [SerializeField] private GameObject m_TurningObstaclePrefab;
     [SerializeField] private GameObject m_SlidingObstaclePrefab;
+    [SerializeField] private GameObject m_CollectableCoinPrefab;
     #endregion
 
     #region Attributes
@@ -28,6 +29,7 @@ public class LevelDataCreator : MonoBehaviour
 
         savePath = AssetDatabase.GenerateUniqueAssetPath("Assets/Resources/LevelDatas/" + CreatedLevelName + "LevelDataData.asset");
 
+        #region SaveRoads
         m_RoadsOnScene = GameObject.FindGameObjectsWithTag(ObjectTags.Road).ToList();
         TempLevelData.RoadPositions = new Vector3[m_RoadsOnScene.Count];
         TempLevelData.RoadRotations = new Quaternion[m_RoadsOnScene.Count];
@@ -36,15 +38,31 @@ public class LevelDataCreator : MonoBehaviour
             TempLevelData.RoadPositions[_roadCount] = m_RoadsOnScene[_roadCount].transform.position;
             TempLevelData.RoadRotations[_roadCount] = m_RoadsOnScene[_roadCount].transform.rotation;
         }
+        #endregion
 
+        #region SaveObstacles
         m_ObstacleOnScene = GameObject.FindGameObjectsWithTag(ObjectTags.ObstacleParent).ToList();
         TempLevelData.ObstaclePositions = new Vector3[m_ObstacleOnScene.Count];
+        TempLevelData.ObstacleRotations = new Quaternion[m_ObstacleOnScene.Count];
         TempLevelData.ObstacleTypes = new ObstacleType[m_ObstacleOnScene.Count];
         for (int _obstacleCount = 0; _obstacleCount < m_ObstacleOnScene.Count; _obstacleCount++)
         {
             TempLevelData.ObstaclePositions[_obstacleCount] = m_ObstacleOnScene[_obstacleCount].transform.position;
             TempLevelData.ObstacleTypes[_obstacleCount] = m_ObstacleOnScene[_obstacleCount].GetComponent<Obstacle>().ObstacleType;
+            TempLevelData.ObstacleRotations[_obstacleCount] = m_ObstacleOnScene[_obstacleCount].transform.rotation;
         }
+        #endregion
+
+        #region SaveCollectableCoins
+        m_CollectableCoinOnScene = GameObject.FindGameObjectsWithTag(ObjectTags.CollectedCoin).ToList();
+        TempLevelData.CoinPositions = new Vector3[m_CollectableCoinOnScene.Count];
+        TempLevelData.CoinRotations = new Quaternion[m_CollectableCoinOnScene.Count];
+        for (int _coinCount = 0; _coinCount < m_CollectableCoinOnScene.Count; _coinCount++)
+        {
+            TempLevelData.CoinPositions[_coinCount] = m_CollectableCoinOnScene[_coinCount].transform.position;
+            TempLevelData.CoinRotations[_coinCount] = m_CollectableCoinOnScene[_coinCount].transform.rotation;
+        }
+        #endregion
 
         AssetDatabase.CreateAsset(TempLevelData, savePath);
         AssetDatabase.SaveAssets();
@@ -121,6 +139,22 @@ public class LevelDataCreator : MonoBehaviour
             m_SpawnedObstacle.transform.localPosition = m_TempObstaclePos;
         }
         #endregion
+
+        #region CreateRandomCoins
+        for (int _spawnedCoinCount = 0; _spawnedCoinCount < 10; _spawnedCoinCount++)
+        {
+            GameObject m_SpawnedCoin = null;
+            Transform m_SpawnedCoinParent;
+            Vector3 m_SpawnedCoinLocalPos;
+            m_SpawnedCoinParent = m_SpawnedRoads[Random.Range(1, (m_SpawnedRoads.Count - 1))].transform;
+            m_SpawnedCoin = Instantiate(m_CollectableCoinPrefab, Vector3.zero, Quaternion.identity, m_SpawnedCoinParent);
+            m_SpawnedCoinLocalPos.x = Random.Range(-7.5f, 7.5f);
+            m_SpawnedCoinLocalPos.y = 0.0f;
+            m_SpawnedCoinLocalPos.z = Random.Range(2.5f, 17.5f);
+            m_SpawnedCoin.transform.localPosition = m_SpawnedCoinLocalPos;
+
+        }
+        #endregion
     }
 
     public void LoadData()
@@ -129,19 +163,11 @@ public class LevelDataCreator : MonoBehaviour
 
         for (int _obstacleCount = 0; _obstacleCount < TempLevelData.ObstacleTypes.Length; _obstacleCount++)
         {
-            GameObject m_SpawnedObstacle;
+            GameObject m_SpawnedObstacle = null;
             switch (TempLevelData.ObstacleTypes[_obstacleCount])
             {
                 case (ObstacleType.AxeObstacle):
                     m_SpawnedObstacle = Instantiate(m_AxeObstaclePrefab, TempLevelData.ObstaclePositions[_obstacleCount], Quaternion.identity, null);
-                    if (m_SpawnedObstacle.transform.position.x > 0)
-                    {
-                        m_SpawnedObstacle.transform.eulerAngles = Vector3.up * (-90.0f);
-                    }
-                    else
-                    {
-                        m_SpawnedObstacle.transform.eulerAngles = Vector3.up * (90.0f);
-                    }
                     break;
                 case (ObstacleType.SlidingObstacle):
                     m_SpawnedObstacle = Instantiate(m_SlidingObstaclePrefab, TempLevelData.ObstaclePositions[_obstacleCount], Quaternion.identity, null);
@@ -150,17 +176,24 @@ public class LevelDataCreator : MonoBehaviour
                     m_SpawnedObstacle = Instantiate(m_TurningObstaclePrefab, TempLevelData.ObstaclePositions[_obstacleCount], Quaternion.identity, null);
                     break;
             }
+
+            m_SpawnedObstacle.transform.rotation = TempLevelData.ObstacleRotations[_obstacleCount];
         }
 
         for (int _roadCount = 0; _roadCount < TempLevelData.RoadPositions.Length; _roadCount++)
         {
             Instantiate(m_RoadPrefab, TempLevelData.RoadPositions[_roadCount], TempLevelData.RoadRotations[_roadCount], null);
         }
+        for (int _coinCount = 0; _coinCount < TempLevelData.CoinPositions.Length; _coinCount++)
+        {
+            Instantiate(m_CollectableCoinPrefab, TempLevelData.CoinPositions[_coinCount], TempLevelData.CoinRotations[_coinCount], null);
+        }
     }
 
     private List<GameObject> m_RoadsOnScene;
     private List<GameObject> m_ObstacleOnScene;
-    private void ClearScene()
+    private List<GameObject> m_CollectableCoinOnScene;
+    public void ClearScene()
     {
         m_RoadsOnScene = GameObject.FindGameObjectsWithTag(ObjectTags.Road).ToList();
         m_RoadsOnScene.ForEach(x =>
@@ -170,6 +203,11 @@ public class LevelDataCreator : MonoBehaviour
 
         m_ObstacleOnScene = GameObject.FindGameObjectsWithTag(ObjectTags.ObstacleParent).ToList();
         m_ObstacleOnScene.ForEach(x =>
+            {
+                DestroyImmediate(x);
+            });
+        m_CollectableCoinOnScene = GameObject.FindGameObjectsWithTag(ObjectTags.CollectedCoin).ToList();
+        m_CollectableCoinOnScene.ForEach(x =>
             {
                 DestroyImmediate(x);
             });

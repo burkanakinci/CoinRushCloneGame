@@ -41,6 +41,10 @@ public class IncomeDataCreatorEditor : Editor
         {
             levelCreator.LoadData();
         }
+        if (GUILayout.Button("Clear Scene"))
+        {
+            levelCreator.ClearScene();
+        }
     }
 
 }

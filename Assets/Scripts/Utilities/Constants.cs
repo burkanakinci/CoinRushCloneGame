@@ -9,6 +9,7 @@ public class PooledObjectTags
     public const string AxeObstacle = "AxeObstacle";
     public const string TurningObstacle = "TurningObstacle";
     public const string SlidingObstacle = "SlidingObstacle";
+    public const string CollectableCoin = "CollectableCoin";
 }
 public class ObjectTags
 {

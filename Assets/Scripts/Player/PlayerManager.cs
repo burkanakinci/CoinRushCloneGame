@@ -7,8 +7,6 @@ public class PlayerManager : CustomBehaviour
 {
     #region Attributes
     public MainCoin MainCoin;
-    public CollectableCoin CollectableCoin;
-    public SlidingObstacle SlidingObstacle;
     public Coin LastCoin;
     #endregion
     #region ExternalAccess
@@ -16,9 +14,61 @@ public class PlayerManager : CustomBehaviour
     #endregion
     public override void Initialize()
     {
+        GameManager.Instance.OnResetToMainMenu += OnResetToMainMenu;
+        GameManager.Instance.OnLevelCompleted += OnLevelCompleted;
+        GameManager.Instance.OnLevelFailed += OnLevelFailed;
+
         MainCoin.Initialize();
         LastCoin = MainCoin;
-        CollectableCoin.Initialize();
-        SlidingObstacle.Initialize();
+
     }
+
+    public void UpdateTotalCoinCountData(int _coinCount)
+    {
+        GameManager.Instance.JsonConverter.PlayerData.TotalCoinCount = _coinCount;
+        GameManager.Instance.JsonConverter.SavePlayerData();
+    }
+    public int GetTotalCoinCount()
+    {
+        return GameManager.Instance.JsonConverter.PlayerData.TotalCoinCount;
+    }
+    public void UpdateLevelData(int _levelNumber)
+    {
+        GameManager.Instance.JsonConverter.PlayerData.LevelNumber = _levelNumber;
+        GameManager.Instance.JsonConverter.SavePlayerData();
+    }
+    private void UpdateNextLevel()
+    {
+        GameManager.Instance.JsonConverter.PlayerData.LevelNumber = (GetLevelNumber() + 1);
+        GameManager.Instance.JsonConverter.SavePlayerData();
+    }
+
+    public int GetLevelNumber()
+    {
+        return GameManager.Instance.JsonConverter.PlayerData.LevelNumber;
+    }
+
+    #region Events
+
+    private void OnResetToMainMenu()
+    {
+    }
+
+    private void OnLevelCompleted()
+    {
+        UpdateNextLevel();
+    }
+
+    private void OnLevelFailed()
+    {
+    }
+
+    private void OnDestroy()
+    {
+        GameManager.Instance.OnResetToMainMenu -= OnResetToMainMenu;
+        GameManager.Instance.OnLevelCompleted -= OnLevelCompleted;
+        GameManager.Instance.OnLevelFailed -= OnLevelFailed;
+    }
+
+    #endregion
 }

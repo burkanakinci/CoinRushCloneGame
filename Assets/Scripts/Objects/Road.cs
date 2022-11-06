@@ -18,11 +18,14 @@ public class Road : CustomBehaviour, IPooledObject
 
     public void OnObjectSpawn()
     {
-
+        GameManager.Instance.LevelManager.OnCleanSceneObject += OnObjectDeactive;
     }
     public void OnObjectDeactive()
     {
+        GameManager.Instance.LevelManager.OnCleanSceneObject -= OnObjectDeactive;
 
+        GameManager.Instance.ObjectPool.AddObjectPool(PooledObjectTags.Road, this);
+        this.gameObject.SetActive(false);
     }
     public CustomBehaviour GetGameObject()
     {

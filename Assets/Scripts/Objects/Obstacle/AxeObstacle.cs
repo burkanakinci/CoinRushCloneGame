@@ -13,11 +13,15 @@ public class AxeObstacle : Obstacle, IPooledObject
 
     public void OnObjectSpawn()
     {
-
+        GameManager.Instance.LevelManager.OnCleanSceneObject += OnObjectDeactive;
+        ObstacleTween();
     }
     public void OnObjectDeactive()
     {
+        GameManager.Instance.LevelManager.OnCleanSceneObject -= OnObjectDeactive;
 
+        GameManager.Instance.ObjectPool.AddObjectPool(PooledObjectTags.AxeObstacle, this);
+        this.gameObject.SetActive(false);
     }
     public CustomBehaviour GetGameObject()
     {
