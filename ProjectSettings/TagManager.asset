@@ -8,6 +8,8 @@ TagManager:
   - FallTrigger
   - HillTrigger
   - Obstacle
+  - Road
+  - ObstacleParent
   layers:
   - Default
   - TransparentFX

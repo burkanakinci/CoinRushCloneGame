@@ -12,6 +12,8 @@ public class ObjectTags
     public const string FallTrigger = "FallTrigger";
     public const string HillTrigger = "HillTrigger";
     public const string Obstacle = "Obstacle";
+    public const string ObstacleParent = "ObstacleParent";
+    public const string Road = "Road";
 }
 public enum ObjectsLayer
 {
@@ -40,7 +42,12 @@ public enum MainCoinStates
     IdleCoinState = 0,
     RunCoinState = 1,
     FallMainCoinState = 2,
-
+}
+public enum ObstacleType
+{
+    TurningObstacle=0,
+    AxeObstacle=1,
+    SlidingObstacle=2,
 }
 public enum UIPanelType
 {

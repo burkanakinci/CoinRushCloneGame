@@ -100,7 +100,7 @@ GameObject:
   - component: {fileID: 5738495934720516176}
   m_Layer: 0
   m_Name: TurningObstacle
-  m_TagString: Untagged
+  m_TagString: ObstacleParent
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -133,6 +133,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_TweenedTransform: {fileID: 2417979390211651757}
+  m_ObstacleType: 0
 --- !u!1 &5009632771502887080
 GameObject:
   m_ObjectHideFlags: 0
