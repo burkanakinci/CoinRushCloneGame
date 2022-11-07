@@ -13,6 +13,7 @@ public class GameManager : CustomBehaviour
     public ObjectPool ObjectPool;
     public LevelManager LevelManager;
     public JsonConverter JsonConverter;
+    public Finish Finish;
     #endregion
 
     #region Actions
@@ -29,17 +30,16 @@ public class GameManager : CustomBehaviour
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
 
         Initialize();
-
-        InputManager.Initialize();
-        PlayerManager.Initialize();
-        CameraManager.Initialize();
-        ObjectPool.Initialize();
-        JsonConverter.Initialize();
-        LevelManager.Initialize();
     }
     public override void Initialize()
     {
-
+        JsonConverter.Initialize();
+        InputManager.Initialize();
+        CameraManager.Initialize();
+        ObjectPool.Initialize();
+        LevelManager.Initialize();
+        PlayerManager.Initialize();
+        Finish.Initialize();
     }
     private void Start()
     {

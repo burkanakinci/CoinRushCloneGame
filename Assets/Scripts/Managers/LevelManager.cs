@@ -13,6 +13,11 @@ public class LevelManager : CustomBehaviour
     private int m_MaxLevelDataCount;
     #endregion
 
+    #region ExternalAccess
+    public Vector3 LastRoadPosition => m_LevelData.RoadPositions[m_LevelData.RoadPositions.Length - 1];
+    public Vector3 FirtRoadPosition => m_LevelData.RoadPositions[0];
+    #endregion
+
     #region Actions
     public event Action OnCleanSceneObject;
     #endregion

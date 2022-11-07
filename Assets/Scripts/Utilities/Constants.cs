@@ -19,6 +19,7 @@ public class ObjectTags
     public const string Obstacle = "Obstacle";
     public const string ObstacleParent = "ObstacleParent";
     public const string Road = "Road";
+    public const string Finish = "Finish";
 }
 public enum ObjectsLayer
 {
@@ -27,6 +28,7 @@ public enum ObjectsLayer
     FallCollider = 8,
     HillTrigger = 9,
     Obstacle = 10,
+    Finish = 11,
 }
 
 public enum ListOperation
