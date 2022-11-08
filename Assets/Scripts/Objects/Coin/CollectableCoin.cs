@@ -21,6 +21,8 @@ public class CollectableCoin : Coin, IPooledObject
         GameManager.Instance.LevelManager.OnCleanSceneObject += OnObjectDeactive;
         GameManager.Instance.OnLevelCompleted += OnLevelCompleted;
 
+        CompletedLastSequence=false;
+
         gameObject.layer = (int)ObjectsLayer.CoinCollectable;
         m_CoinCollider.isTrigger = true;
         m_CoinStateMachine.ChangeCoinState(CollectableCoinStates.IdleCoinState, true);

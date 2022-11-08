@@ -14,6 +14,7 @@ public class Coin : CustomBehaviour
 
     [HideInInspector] public Coin FrontCoin;
     [HideInInspector] public Coin BackCoin;
+    [HideInInspector] public bool CompletedLastSequence;
     #endregion
 
     #region ExternalAccess
@@ -115,7 +116,14 @@ public class Coin : CustomBehaviour
 
         m_EmplacementFinishStairSequence = DOTween.Sequence().SetId(m_EmplacementFinishStairTweenID);
         m_EmplacementFinishStairSequence.Append(
-            transform.DOMove(GameManager.Instance.Finish.GetEmptyStairPos(), 0.75f).SetEase(Ease.Linear)
+            transform.DOMove(GameManager.Instance.Finish.GetEmptyStairPos(), 0.75f).SetEase(Ease.Linear).
+            OnComplete(() =>
+            {
+                if (BackCoin == null)
+                {
+                    CompletedLastSequence = true;
+                }
+            })
         );
         m_EmplacementFinishStairSequence.InsertCallback(0.25f,
         () =>

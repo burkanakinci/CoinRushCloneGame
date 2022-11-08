@@ -5,6 +5,7 @@ using UnityEngine;
 public class Finish : CustomBehaviour
 {
     #region Attributes
+    [SerializeField] private GameObject m_FinishTrigger;
     [SerializeField] private Transform[] m_FinishPlacementTransforms;
     [SerializeField] private Transform m_FinishMainCoinPlacement;
     private int m_EmptyStairIndex;
@@ -12,7 +13,7 @@ public class Finish : CustomBehaviour
 
     #region ExternalAccess
     public Transform FinishMainCoinPlacement => m_FinishMainCoinPlacement;
-    private int EmptyStairIndex => m_EmptyStairIndex;
+    public int FullStairIndex => m_EmptyStairIndex;
     #endregion
 
     public override void Initialize()
@@ -36,6 +37,7 @@ public class Finish : CustomBehaviour
     #region Events
     private void OnResetToMainMenu()
     {
+        m_FinishTrigger.layer = (int)ObjectsLayer.Finish;
         SetFinishPosition();
         m_EmptyStairIndex = 0;
     }

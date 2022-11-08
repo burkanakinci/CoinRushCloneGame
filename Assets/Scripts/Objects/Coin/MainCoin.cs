@@ -104,6 +104,7 @@ public class MainCoin : Coin
         }
         else if (other.CompareTag(ObjectTags.Finish))
         {
+            other.gameObject.layer = (int)ObjectsLayer.Default;
             GameManager.Instance.LevelCompleted();
         }
     }
@@ -177,6 +178,7 @@ public class MainCoin : Coin
     #region Events
     private void OnResetToMainMenu()
     {
+        CompletedLastSequence = false;
         StartChangeSeatedTrue();
         ChangeRigidbodyKinematic(false);
     }

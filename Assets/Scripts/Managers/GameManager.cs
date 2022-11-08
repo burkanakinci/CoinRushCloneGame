@@ -14,13 +14,13 @@ public class GameManager : CustomBehaviour
     public LevelManager LevelManager;
     public JsonConverter JsonConverter;
     public Finish Finish;
+    public UIManager UIManager;
     #endregion
 
     #region Actions
     public event Action OnResetToMainMenu;
     public event Action OnLevelCompleted;
     public event Action OnLevelFailed;
-    public event Action OnGameStart;
     #endregion
     private void Awake()
     {
@@ -40,6 +40,7 @@ public class GameManager : CustomBehaviour
         LevelManager.Initialize();
         PlayerManager.Initialize();
         Finish.Initialize();
+        UIManager.Initialize();
     }
     private void Start()
     {
@@ -56,9 +57,5 @@ public class GameManager : CustomBehaviour
     public void LevelCompleted()
     {
         OnLevelCompleted?.Invoke();
-    }
-    public void StartGame()
-    {
-        OnGameStart?.Invoke();
     }
 }
