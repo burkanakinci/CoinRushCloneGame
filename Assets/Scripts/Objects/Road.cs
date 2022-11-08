@@ -6,6 +6,7 @@ public class Road : CustomBehaviour, IPooledObject
 {
     #region Fields
     [SerializeField] private Transform m_LastPosition;
+    [SerializeField] private HillTrigger m_HillTrigger;
     #endregion
     #region ExternalAccess
     public Transform LastPosition => m_LastPosition;
@@ -19,6 +20,8 @@ public class Road : CustomBehaviour, IPooledObject
     public void OnObjectSpawn()
     {
         GameManager.Instance.LevelManager.OnCleanSceneObject += OnObjectDeactive;
+
+        m_HillTrigger.gameObject.layer = (int)ObjectsLayer.HillTrigger;
     }
     public void OnObjectDeactive()
     {

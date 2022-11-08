@@ -28,7 +28,7 @@ public class GameManager : CustomBehaviour
 
         Application.targetFrameRate = 60;
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
-
+        PlayerPrefs.DeleteAll();
         Initialize();
     }
     public override void Initialize()

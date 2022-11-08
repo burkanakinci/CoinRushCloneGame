@@ -9,5 +9,6 @@ public class CollectableCoinStateMachine : CoinStateMachine
         m_States.Add(new IdleCoinState(_coin));
         m_States.Add(new ParticipationPlayerCoinState(_coin));
         m_States.Add(new RunCoinState(_coin));
+        m_States.Add(new WinCoinState(_coin));
     }
 }

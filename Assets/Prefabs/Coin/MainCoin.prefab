@@ -194,8 +194,8 @@ MonoBehaviour:
   m_BackCoinParent: {fileID: 1103002842308518657}
   FrontCoin: {fileID: 0}
   BackCoin: {fileID: 0}
-  m_MainCoinRotationMultiplier: 10
-  m_MainCoinForwardMultiplier: 100
+  m_MainCoinRotationMultiplier: 70
+  m_MainCoinForwardMultiplier: 250
   m_CoinRB: {fileID: 1103002841784835265}
 --- !u!1 &1103002842308518656
 GameObject:

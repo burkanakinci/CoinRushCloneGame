@@ -9,5 +9,6 @@ public class MainCoinStateMachine : CoinStateMachine
         m_States.Add(new IdleMainCoinState(_coin));
         m_States.Add(new RunMainCoinState(_coin));
         m_States.Add(new FallMainCoinState(_coin));
+        m_States.Add(new WinMainCoinState(_coin));
     }
 }

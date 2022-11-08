@@ -14,10 +14,12 @@ public class CollectableCoin : Coin, IPooledObject
         m_CoinStateMachine = new CollectableCoinStateMachine(this);
 
         m_FrontCoinMovementSequenceID = GetInstanceID() + "m_FrontCoinMovementSequenceID";
+
     }
     public void OnObjectSpawn()
     {
         GameManager.Instance.LevelManager.OnCleanSceneObject += OnObjectDeactive;
+        GameManager.Instance.OnLevelCompleted += OnLevelCompleted;
 
         gameObject.layer = (int)ObjectsLayer.CoinCollectable;
         m_CoinCollider.isTrigger = true;
@@ -26,6 +28,7 @@ public class CollectableCoin : Coin, IPooledObject
     public void OnObjectDeactive()
     {
         GameManager.Instance.LevelManager.OnCleanSceneObject -= OnObjectDeactive;
+        GameManager.Instance.OnLevelCompleted -= OnLevelCompleted;
 
         GameManager.Instance.ObjectPool.AddObjectPool(PooledObjectTags.CollectableCoin, this);
         this.gameObject.SetActive(false);
@@ -33,6 +36,12 @@ public class CollectableCoin : Coin, IPooledObject
     public CustomBehaviour GetGameObject()
     {
         return this;
+    }
+
+    public override void KillAllTween()
+    {
+        base.KillAllTween();
+        DOTween.Kill(m_FrontCoinMovementSequenceID);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -90,4 +99,12 @@ public class CollectableCoin : Coin, IPooledObject
         m_TargetPosition = FrontCoin.BackCoinParent.transform.position;
         transform.position = Vector3.Lerp(transform.position, m_TargetPosition, m_MoveFrontCoinLerp * Time.deltaTime);
     }
+
+    #region Events
+    private void OnLevelCompleted()
+    {
+        m_CoinStateMachine.ChangeCoinState(CollectableCoinStates.WinCoinState);
+    }
+
+    #endregion
 }

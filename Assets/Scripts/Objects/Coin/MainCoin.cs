@@ -17,7 +17,15 @@ public class MainCoin : Coin
 
         m_EmplacementTweenID = GetInstanceID() + "m_EmplacementTweenID";
 
-        m_IsSeated = true;
+        GameManager.Instance.OnResetToMainMenu += OnResetToMainMenu;
+        GameManager.Instance.OnLevelCompleted += OnLevelCompleted;
+        GameManager.Instance.OnLevelFailed += OnLevelFailed;
+    }
+
+    public override void KillAllTween()
+    {
+        base.KillAllTween();
+        DOTween.Kill(m_EmplacementTweenID);
     }
 
     private float m_SwipeValue;
@@ -28,17 +36,17 @@ public class MainCoin : Coin
         m_SwipeValue = _swipeValue;
 
         m_CoinLookPos = transform.forward;
-        m_CoinLookPos.x += m_SwipeValue * m_MainCoinRotationMultiplier;
-
-        RotateCoin(m_CoinLookPos);
+        m_CoinLookPos.x += m_SwipeValue;
+        RotateCoin();
     }
 
-    public void RotateCoin(Vector3 _lookPos)
+    public void RotateCoin()
     {
         if (m_IsSeated)
         {
-            m_TempRotation = Quaternion.LookRotation(_lookPos);
-            m_CoinRotation = Quaternion.Lerp(transform.rotation, m_TempRotation, 50f * Time.deltaTime);
+            m_TempRotation = Quaternion.LookRotation(m_CoinLookPos);
+
+            m_CoinRotation = Quaternion.Lerp(transform.rotation, m_TempRotation, m_MainCoinRotationMultiplier * Time.deltaTime);
 
             transform.rotation = m_CoinRotation;
         }
@@ -56,14 +64,29 @@ public class MainCoin : Coin
         m_CoinRB.velocity = (transform.forward + Vector3.down) * (m_MainCoinForwardMultiplier * Time.fixedDeltaTime);
     }
 
+    public void ChangeRigidbodyKinematic(bool _isKinematic)
+    {
+        if (_isKinematic == true)
+        {
+            m_CoinRB.velocity = Vector3.zero;
+            m_CoinRB.isKinematic = true;
+        }
+        else
+        {
+            m_CoinRB.isKinematic = false;
+        }
+
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag(ObjectTags.FallTrigger))
         {
-            m_CoinStateMachine.ChangeCoinState(MainCoinStates.FallMainCoinState);
+            GameManager.Instance.LevelFailed();
         }
         else if (other.CompareTag(ObjectTags.HillTrigger))
         {
+            other.gameObject.layer = (int)ObjectsLayer.Default;
             m_IsSeated = false;
             m_ActiveHill = other.GetComponent<HillTrigger>();
             StartEmplacementOnRoadTween();
@@ -78,6 +101,10 @@ public class MainCoin : Coin
             {
                 //son coin faille
             }
+        }
+        else if (other.CompareTag(ObjectTags.Finish))
+        {
+            GameManager.Instance.LevelCompleted();
         }
     }
 
@@ -117,13 +144,56 @@ public class MainCoin : Coin
 
         m_EmplacementSequence = DOTween.Sequence().SetId(m_EmplacementTweenID);
         m_EmplacementSequence.Append(
-            transform.DORotateQuaternion(m_TempEmplacementRot, 0.4f).SetEase(Ease.Linear)
+            transform.DORotateQuaternion(m_TempEmplacementRot, 0.25f).SetEase(Ease.Linear)
         );
-        m_EmplacementSequence.Append(
-            transform.DOMove(m_TempEmplacementPos, 0.6f).SetEase(Ease.Linear)
-        ).OnComplete(() =>
+        m_EmplacementSequence.Join(
+            transform.DOMove(m_TempEmplacementPos, 0.25f).SetEase(Ease.Linear)
+        );
+        m_EmplacementSequence.OnComplete(() =>
         {
-            m_IsSeated = true;
+            transform.rotation = m_TempEmplacementRot;
+            StartChangeSeatedTrue();
         });
     }
+
+    private Coroutine m_ChangeSeatedCoroutine;
+    private void StartChangeSeatedTrue()
+    {
+        if (m_ChangeSeatedCoroutine != null)
+        {
+            StopCoroutine(m_ChangeSeatedCoroutine);
+        }
+
+        m_ChangeSeatedCoroutine = StartCoroutine(ChangeSeatedCoroutine());
+    }
+
+    private IEnumerator ChangeSeatedCoroutine()
+    {
+        yield return new WaitForEndOfFrame();
+
+        m_IsSeated = true;
+    }
+
+    #region Events
+    private void OnResetToMainMenu()
+    {
+        StartChangeSeatedTrue();
+        ChangeRigidbodyKinematic(false);
+    }
+    private void OnLevelCompleted()
+    {
+        m_CoinStateMachine.ChangeCoinState(MainCoinStates.WinMainCoinState);
+    }
+
+    private void OnLevelFailed()
+    {
+        m_CoinStateMachine.ChangeCoinState(MainCoinStates.FallMainCoinState);
+    }
+    private void OnDestroy()
+    {
+        GameManager.Instance.OnResetToMainMenu -= OnResetToMainMenu;
+        GameManager.Instance.OnLevelCompleted -= OnLevelCompleted;
+        GameManager.Instance.OnLevelFailed -= OnLevelFailed;
+    }
+    #endregion
 }

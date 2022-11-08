@@ -141,7 +141,7 @@ public class LevelDataCreator : MonoBehaviour
         #endregion
 
         #region CreateRandomCoins
-        for (int _spawnedCoinCount = 0; _spawnedCoinCount < 10; _spawnedCoinCount++)
+        for (int _spawnedCoinCount = 0; _spawnedCoinCount < 9; _spawnedCoinCount++)
         {
             GameObject m_SpawnedCoin = null;
             Transform m_SpawnedCoinParent;

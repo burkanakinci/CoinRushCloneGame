@@ -82,7 +82,7 @@ public class LevelManager : CustomBehaviour
     }
     private void SpawnCollectableCoin()
     {
-        for (int _collactableCount = 0; _collactableCount < m_LevelData.ObstacleTypes.Length; _collactableCount++)
+        for (int _collactableCount = 0; _collactableCount < m_LevelData.CoinPositions.Length; _collactableCount++)
         {
 
             GameManager.Instance.ObjectPool.SpawnFromPool(PooledObjectTags.CollectableCoin,

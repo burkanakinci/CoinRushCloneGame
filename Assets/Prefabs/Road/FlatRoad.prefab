@@ -225,7 +225,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2604620193614498636}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2604620194455911818}
@@ -303,7 +303,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2604620194455911818}
   - component: {fileID: 4319118843308765189}
-  - component: {fileID: 3354811856212899849}
   m_Layer: 0
   m_Name: FlatRoad
   m_TagString: Road
@@ -343,19 +342,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_LastPosition: {fileID: 2604620193959030841}
---- !u!65 &3354811856212899849
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2604620194455911821}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 20, y: 20, z: 20}
-  m_Center: {x: 0, y: -10, z: 10}
+  m_HillTrigger: {fileID: 2604620193220749931}
 --- !u!1001 &2604620193099120351
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -23,6 +23,7 @@ public class ObjectTags
 }
 public enum ObjectsLayer
 {
+    Default = 0,
     CoinCollectable = 6,
     CoinCollected = 7,
     FallCollider = 8,
@@ -42,6 +43,7 @@ public enum CollectableCoinStates
     IdleCoinState = 0,
     ParticipationPlayerCoinState = 1,
     RunCoinState = 2,
+    WinCoinState=3,
 
 }
 public enum MainCoinStates
@@ -49,6 +51,7 @@ public enum MainCoinStates
     IdleCoinState = 0,
     RunCoinState = 1,
     FallMainCoinState = 2,
+    WinMainCoinState=3,
 }
 public enum ObstacleType
 {
