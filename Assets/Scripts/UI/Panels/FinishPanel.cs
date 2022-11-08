@@ -26,11 +26,11 @@ public class FinishPanel : UIPanel
 
         m_RewardCoinTweenID = GetInstanceID() + "m_RewardCoinTweenID";
 
-        GameManager.Instance.OnLevelCompleted += ShowPanel;
-        GameManager.Instance.OnLevelFailed += ShowPanel;
         GameManager.Instance.OnLevelCompleted += ShowSuccessPanel;
         GameManager.Instance.OnLevelFailed += ShowFailPanel;
         GameManager.Instance.OnResetToMainMenu += OnResetToMainMenu;
+        GameManager.Instance.OnLevelCompleted += ShowPanel;
+        GameManager.Instance.OnLevelFailed += ShowPanel;
     }
 
     private Coroutine m_ShowFinishPanelCoroutine;
@@ -45,13 +45,17 @@ public class FinishPanel : UIPanel
     }
     private IEnumerator ShowFinishPanelCoroutine()
     {
-        yield return new WaitUntil(() => (GameManager.Instance.PlayerManager.LastCoin.CompletedLastSequence));
+        yield return new WaitUntil(() => ((GameManager.Instance.PlayerManager.LastCoin.CompletedLastSequence) ||
+            (GameManager.Instance.PlayerManager.MainCoin.EqualMainCoinState(MainCoinStates.FallMainCoinState))));
         base.ShowPanel();
 
+        StartRewardCoinTween();
+    }
+
+    private void SetFinishTexts()
+    {
         m_RewardCoinText.text = m_CurrentRewardCoinCount.ToString();
         m_CoinCountText.text = GameManager.Instance.PlayerManager.GetTotalCoinCount().ToString();
-
-        StartRewardCoinTween();
     }
 
     private Coroutine m_ShowSuccessPanelCoroutine;
@@ -79,6 +83,7 @@ public class FinishPanel : UIPanel
         m_CurrentRewardCoinCount = (m_SuccessReward * GameManager.Instance.Finish.FullStairIndex);
         m_FailCanvas.Close();
         m_SuccessCanvas.Open();
+        SetFinishTexts();
     }
     private IEnumerator ShowFailPanelCoroutine()
     {
@@ -86,6 +91,7 @@ public class FinishPanel : UIPanel
         m_CurrentRewardCoinCount = m_FailReward;
         m_SuccessCanvas.Close();
         m_FailCanvas.Open();
+        SetFinishTexts();
     }
 
     private Coroutine m_StartRewardCoinCoroutine;

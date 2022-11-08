@@ -37,11 +37,7 @@ public class PlayerManager : CustomBehaviour
         GameManager.Instance.JsonConverter.PlayerData.LevelNumber = _levelNumber;
         GameManager.Instance.JsonConverter.SavePlayerData();
     }
-    private void UpdateNextLevel()
-    {
-        GameManager.Instance.JsonConverter.PlayerData.LevelNumber = (GetLevelNumber() + 1);
-        GameManager.Instance.JsonConverter.SavePlayerData();
-    }
+
 
     public int GetLevelNumber()
     {
@@ -52,11 +48,11 @@ public class PlayerManager : CustomBehaviour
 
     private void OnResetToMainMenu()
     {
+        LastCoin = MainCoin;
     }
 
     private void OnLevelCompleted()
     {
-        UpdateNextLevel();
     }
 
     private void OnLevelFailed()

@@ -119,6 +119,7 @@ public class Coin : CustomBehaviour
             transform.DOMove(GameManager.Instance.Finish.GetEmptyStairPos(), 0.75f).SetEase(Ease.Linear).
             OnComplete(() =>
             {
+                GameManager.Instance.ObjectPool.SpawnFromPool(PooledObjectTags.ConfettiVFX, transform.position, Quaternion.identity, null);
                 if (BackCoin == null)
                 {
                     CompletedLastSequence = true;
@@ -133,5 +134,10 @@ public class Coin : CustomBehaviour
                 BackCoin.StartFinishStairPlacementSequence();
             }
         });
+    }
+
+    public virtual void CollectedObstacle()
+    {
+
     }
 }

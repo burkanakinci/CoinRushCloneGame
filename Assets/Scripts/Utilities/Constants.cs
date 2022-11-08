@@ -10,9 +10,11 @@ public class PooledObjectTags
     public const string TurningObstacle = "TurningObstacle";
     public const string SlidingObstacle = "SlidingObstacle";
     public const string CollectableCoin = "CollectableCoin";
+    public const string ConfettiVFX = "ConfettiVFX";
 }
 public class ObjectTags
 {
+    public const string Untagged = "Untagged";
     public const string CollectedCoin = "CollectedCoin";
     public const string FallTrigger = "FallTrigger";
     public const string HillTrigger = "HillTrigger";
@@ -43,7 +45,7 @@ public enum CollectableCoinStates
     IdleCoinState = 0,
     ParticipationPlayerCoinState = 1,
     RunCoinState = 2,
-    WinCoinState=3,
+    WinCoinState = 3,
 
 }
 public enum MainCoinStates
@@ -51,7 +53,7 @@ public enum MainCoinStates
     IdleCoinState = 0,
     RunCoinState = 1,
     FallMainCoinState = 2,
-    WinMainCoinState=3,
+    WinMainCoinState = 3,
 }
 public enum ObstacleType
 {

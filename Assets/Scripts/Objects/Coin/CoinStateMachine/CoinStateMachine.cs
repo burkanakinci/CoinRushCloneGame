@@ -11,17 +11,13 @@ public class CoinStateMachine : StateMachine
 
     }
 
-    public void ChangeCoinState(CollectableCoinStates _state, bool _changeForce = false)
+    public void ChangeCoinState(int _stateIndex, bool _changeForce = false)
     {
-        ChangeState((int)_state, _changeForce);
-    }
-    public void ChangeCoinState(MainCoinStates _state, bool _changeForce = false)
-    {
-        ChangeState((int)_state, _changeForce);
+        ChangeState(_stateIndex, _changeForce);
     }
 
-    public bool EqualState(CollectableCoinStates _state)
+    public bool EqualState(int _stateIndex)
     {
-        return EqualCurrentState((int)_state);
+        return EqualCurrentState(_stateIndex);
     }
 }

@@ -13,7 +13,6 @@ public class MainCoin : Coin
         base.Initialize();
 
         m_CoinStateMachine = new MainCoinStateMachine(this);
-        m_CoinStateMachine.ChangeCoinState(MainCoinStates.RunCoinState, true);
 
         m_EmplacementTweenID = GetInstanceID() + "m_EmplacementTweenID";
 
@@ -26,6 +25,12 @@ public class MainCoin : Coin
     {
         base.KillAllTween();
         DOTween.Kill(m_EmplacementTweenID);
+    }
+
+    public override void CollectedObstacle()
+    {
+        m_CoinStateMachine.ChangeCoinState((int)MainCoinStates.IdleCoinState, true);
+        GameManager.Instance.LevelFailed();
     }
 
     private float m_SwipeValue;
@@ -78,6 +83,7 @@ public class MainCoin : Coin
 
     }
 
+    private Coin m_TempLastCoin;
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag(ObjectTags.FallTrigger))
@@ -97,9 +103,11 @@ public class MainCoin : Coin
             {
                 GameManager.Instance.LevelFailed();
             }
-            else
+            else if (other.CompareTag(ObjectTags.Obstacle))
             {
-                //son coin faille
+                m_TempLastCoin = GameManager.Instance.PlayerManager.LastCoin;
+                GameManager.Instance.PlayerManager.LastCoin = m_TempLastCoin.FrontCoin;
+                m_TempLastCoin.CollectedObstacle();
             }
         }
         else if (other.CompareTag(ObjectTags.Finish))
@@ -175,21 +183,32 @@ public class MainCoin : Coin
         m_IsSeated = true;
     }
 
+    public bool EqualMainCoinState(MainCoinStates _state)
+    {
+        return m_CoinStateMachine.EqualState((int)_state);
+    }
+
     #region Events
     private void OnResetToMainMenu()
     {
+        BackCoin = null;
+        FrontCoin = null;
+        KillAllTween();
+        transform.rotation = Quaternion.identity;
+        transform.position = GameManager.Instance.LevelManager.FirtRoadPosition;
         CompletedLastSequence = false;
         StartChangeSeatedTrue();
         ChangeRigidbodyKinematic(false);
+        m_CoinStateMachine.ChangeCoinState((int)MainCoinStates.RunCoinState, true);
     }
     private void OnLevelCompleted()
     {
-        m_CoinStateMachine.ChangeCoinState(MainCoinStates.WinMainCoinState);
+        m_CoinStateMachine.ChangeCoinState((int)MainCoinStates.WinMainCoinState);
     }
 
     private void OnLevelFailed()
     {
-        m_CoinStateMachine.ChangeCoinState(MainCoinStates.FallMainCoinState);
+        m_CoinStateMachine.ChangeCoinState((int)MainCoinStates.FallMainCoinState);
     }
     private void OnDestroy()
     {

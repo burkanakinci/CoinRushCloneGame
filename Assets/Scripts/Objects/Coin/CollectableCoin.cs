@@ -6,7 +6,7 @@ using DG.Tweening;
 public class CollectableCoin : Coin, IPooledObject
 {
     #region MovementLerpMultiplier
-    [SerializeField] private float m_RotateFrontCoinLerpLerp = 50.0f, m_MoveFrontCoinLerp = 50.0f;
+    [SerializeField] private CoinData m_CoinData;
     #endregion
     public override void Initialize()
     {
@@ -21,16 +21,22 @@ public class CollectableCoin : Coin, IPooledObject
         GameManager.Instance.LevelManager.OnCleanSceneObject += OnObjectDeactive;
         GameManager.Instance.OnLevelCompleted += OnLevelCompleted;
 
-        CompletedLastSequence=false;
+        CompletedLastSequence = false;
+
+        BackCoin = null;
+        FrontCoin = null;
 
         gameObject.layer = (int)ObjectsLayer.CoinCollectable;
+        gameObject.tag = ObjectTags.Untagged;
         m_CoinCollider.isTrigger = true;
-        m_CoinStateMachine.ChangeCoinState(CollectableCoinStates.IdleCoinState, true);
+        m_CoinStateMachine.ChangeCoinState((int)CollectableCoinStates.IdleCoinState, true);
     }
     public void OnObjectDeactive()
     {
         GameManager.Instance.LevelManager.OnCleanSceneObject -= OnObjectDeactive;
         GameManager.Instance.OnLevelCompleted -= OnLevelCompleted;
+
+        KillAllTween();
 
         GameManager.Instance.ObjectPool.AddObjectPool(PooledObjectTags.CollectableCoin, this);
         this.gameObject.SetActive(false);
@@ -46,23 +52,30 @@ public class CollectableCoin : Coin, IPooledObject
         DOTween.Kill(m_FrontCoinMovementSequenceID);
     }
 
+    public override void CollectedObstacle()
+    {
+        OnObjectDeactive();
+    }
+
+    private Coin m_TempLastCoin;
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag(ObjectTags.CollectedCoin))
         {
             gameObject.layer = (int)ObjectsLayer.CoinCollected;
-            FrontCoin = GameManager.Instance.PlayerManager.LastCoin;
-            FrontCoin.BackCoin = this;
-            transform.SetParent(FrontCoin.BackCoinParent);
+            m_TempLastCoin = GameManager.Instance.PlayerManager.LastCoin;
             GameManager.Instance.PlayerManager.LastCoin = this;
+            FrontCoin = m_TempLastCoin;
+            m_TempLastCoin.BackCoin = this;
+            transform.SetParent(m_TempLastCoin.BackCoinParent);
             MoveToFrontCoinSequence();
-            m_CoinStateMachine.ChangeCoinState(CollectableCoinStates.ParticipationPlayerCoinState);
+            m_CoinStateMachine.ChangeCoinState((int)CollectableCoinStates.ParticipationPlayerCoinState);
         }
         else if (other.CompareTag(ObjectTags.Obstacle))
         {
-
-            // coin faille
-
+            m_TempLastCoin = GameManager.Instance.PlayerManager.LastCoin;
+            GameManager.Instance.PlayerManager.LastCoin = m_TempLastCoin.FrontCoin;
+            m_TempLastCoin.CollectedObstacle();
         }
     }
 
@@ -70,7 +83,6 @@ public class CollectableCoin : Coin, IPooledObject
     private Sequence m_FrontCoinMovementSequence;
     public void MoveToFrontCoinSequence()
     {
-
         DOTween.Kill(m_FrontCoinMovementSequenceID);
 
         m_FrontCoinMovementSequence = DOTween.Sequence().SetId(m_FrontCoinMovementSequenceID);
@@ -80,8 +92,9 @@ public class CollectableCoin : Coin, IPooledObject
         {
             m_CoinCollider.isTrigger = false;
             transform.SetParent(null);
+            gameObject.tag = ObjectTags.CollectedCoin;
             GameManager.Instance.PlayerManager.MainCoin.VisualPunchTween();
-            m_CoinStateMachine.ChangeCoinState(CollectableCoinStates.RunCoinState);
+            m_CoinStateMachine.ChangeCoinState((int)CollectableCoinStates.RunCoinState);
         });
         m_FrontCoinMovementSequence.Join(
             transform.DOLocalRotateQuaternion(Quaternion.identity, 1f)
@@ -92,20 +105,20 @@ public class CollectableCoin : Coin, IPooledObject
     public void RotateCoinToFrontCoin()
     {
         m_TargetRotation = FrontCoin.transform.rotation;
-        transform.rotation = Quaternion.Lerp(transform.rotation, m_TargetRotation, m_RotateFrontCoinLerpLerp * Time.deltaTime);
+        transform.rotation = Quaternion.Lerp(transform.rotation, m_TargetRotation, m_CoinData.RotateFrontCoinLerp* Time.deltaTime);
     }
 
     private Vector3 m_TargetPosition;
     public void MoveCoinToFrontCoin()
     {
         m_TargetPosition = FrontCoin.BackCoinParent.transform.position;
-        transform.position = Vector3.Lerp(transform.position, m_TargetPosition, m_MoveFrontCoinLerp * Time.deltaTime);
+        transform.position = Vector3.Lerp(transform.position, m_TargetPosition, m_CoinData.MoveFrontCoinLerp * Time.deltaTime);
     }
 
     #region Events
     private void OnLevelCompleted()
     {
-        m_CoinStateMachine.ChangeCoinState(CollectableCoinStates.WinCoinState);
+        m_CoinStateMachine.ChangeCoinState((int)CollectableCoinStates.WinCoinState);
     }
 
     #endregion

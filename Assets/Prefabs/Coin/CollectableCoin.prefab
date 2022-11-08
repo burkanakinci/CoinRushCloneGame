@@ -163,8 +163,8 @@ MonoBehaviour:
   m_BackCoinParent: {fileID: 4395045637486731082}
   FrontCoin: {fileID: 0}
   BackCoin: {fileID: 0}
-  m_RotateFrontCoinLerpLerp: 5
-  m_MoveFrontCoinLerp: 10
+  CompletedLastSequence: 0
+  m_CoinData: {fileID: 11400000, guid: 939e16f2e58d20444a3e707f1bff1661, type: 2}
 --- !u!1 &4395045637486731081
 GameObject:
   m_ObjectHideFlags: 0
