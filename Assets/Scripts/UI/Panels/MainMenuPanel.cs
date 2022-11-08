@@ -9,6 +9,7 @@ public class MainMenuPanel : UIPanel
     public override void Initialize(UIManager uiManager)
     {
         base.Initialize(uiManager);
+        GameManager.Instance.OnResetToMainMenu += ShowPanel;
     }
 
     public override void ShowPanel()
@@ -16,4 +17,5 @@ public class MainMenuPanel : UIPanel
         base.ShowPanel();
         m_LevelText.text = "Level : " + GameManager.Instance.PlayerManager.GetLevelNumber().ToString();
     }
+
 }

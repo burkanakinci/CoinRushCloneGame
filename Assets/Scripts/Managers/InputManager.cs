@@ -42,7 +42,6 @@ public class InputManager : CustomBehaviour
             if (!m_IsUIOverride)
             {
                 TouchControls();
-
             }
         }
         else if (Input.GetMouseButtonUp(0))
@@ -52,7 +51,6 @@ public class InputManager : CustomBehaviour
                 TouchControlsUp();
             }
         }
-
         OnSwiped?.Invoke(m_HorizontalMovementChange);
     }
 

@@ -9,11 +9,26 @@ public class HudPanel : UIPanel
     public override void Initialize(UIManager uiManager)
     {
         base.Initialize(uiManager);
-
+        GameManager.Instance.OnResetToMainMenu += OnResetToMainMenu;
     }
 
     private void OnDestroy()
     {
+    }
+
+    private void OnResetToMainMenu()
+    {
+        GameManager.Instance.InputManager.OnSwiped += ShowHudPanel;
+    }
+
+    public void ShowHudPanel(float _swipe)
+    {
+        if (_swipe == 0.0f)
+        {
+            return;
+        }
+        GameManager.Instance.InputManager.OnSwiped -= ShowHudPanel;
+        ShowPanel();
     }
 
     public override void ShowPanel()
